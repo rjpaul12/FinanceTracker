@@ -16,7 +16,7 @@ def extract(ticker):
         raise ValueError(f"Unexpected API response for {ticker}: {data}")
     return data
 
-# ── STEP 2: TRANSFORM ────────────────────────────────
+# ── TRANSFORM ────────────────────────────────
 def transform(raw_data, ticker):
     cleaned = []
     for record in raw_data:
