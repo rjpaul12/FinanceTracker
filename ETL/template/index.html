@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ETL Finance Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #f8f9fa; }
+        .header { background-color: #0d6efd; color: white; padding: 30px; border-radius: 10px; }
+        .badge-Strong  { background-color: #198754; }
+        .badge-Moderate { background-color: #ffc107; color: #000; }
+        .badge-Weak    { background-color: #dc3545; }
+        .flow-box {
+            background: white;
+            border: 2px solid #0d6efd;
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .arrow { font-size: 24px; color: #0d6efd; text-align: center; }
+    </style>
+</head>
+<body>
+<div class="container my-4">
+
+    <!-- Header -->
+    <div class="header mb-4">
+        <h1>📈 Company Financial Tracker</h1>
+        <p class="mb-0">Website A — ETL Pipeline (Extract → Transform → Load)</p>
+    </div>
+
+    <!-- ETL Flow Diagram -->
+    <h4 class="mb-3">🔄 ETL Data Flow</h4>
+    <div class="row text-center mb-4 align-items-center">
+        <div class="col">
+            <div class="flow-box">📡 EXTRACT<br><small class="text-muted">FMP API (JSON)</small></div>
+        </div>
+        <div class="col arrow">→</div>
+        <div class="col">
+            <div class="flow-box">🔧 TRANSFORM<br><small class="text-muted">Python Script</small></div>
+        </div>
+        <div class="col arrow">→</div>
+        <div class="col">
+            <div class="flow-box">💾 LOAD<br><small class="text-muted">SQLite DB</small></div>
+        </div>
+        <div class="col arrow">→</div>
+        <div class="col">
+            <div class="flow-box">🌐 DISPLAY<br><small class="text-muted">Flask + HTML</small></div>
+        </div>
+    </div>
+
+    <!-- Run ETL Button -->
+    <div class="mb-4">
+        <a href="/run-etl" class="btn btn-primary btn-lg">▶ Run ETL Pipeline</a>
+        <small class="text-muted ms-3">Click to fetch fresh data from the API</small>
+    </div>
+
+    <!-- Data Table -->
+    <h4 class="mb-3">📊 Cleaned Financial Data (from SQLite)</h4>
+    {% if records %}
+    <table class="table table-bordered table-hover bg-white shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Ticker</th>
+                <th>Company</th>
+                <th>Fiscal Year</th>
+                <th>Revenue (M)</th>
+                <th>Net Income (M)</th>
+                <th>Gross Profit (M)</th>
+                <th>Profit Margin %</th>
+                <th>Health</th>
+                <th>Loaded At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for r in records %}
+            <tr>
+                <td><strong>{{ r["ticker"] }}</strong></td>
+                <td>{{ r["company"] }}</td>
+                <td>{{ r["fiscal_year"] }}</td>
+                <td>${{ r["revenue"] }}M</td>
+                <td>${{ r["net_income"] }}M</td>
+                <td>${{ r["gross_profit"] }}M</td>
+                <td>{{ r["profit_margin"] }}%</td>
+                <td>
+                    <span class="badge badge-{{ r['financial_health'] }}">
+                        {{ r["financial_health"] }}
+                    </span>
+                </td>
+                <td><small>{{ r["loaded_at"] }}</small></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <div class="alert alert-warning">
+        No data yet! Click <strong>Run ETL Pipeline</strong> above to fetch and load data.
+    </div>
+    {% endif %}
+
+</div>
+</body>
+</html>
